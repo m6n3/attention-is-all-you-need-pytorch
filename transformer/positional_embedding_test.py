@@ -14,7 +14,7 @@ class TestPositionalEmbedding(unittest.TestCase):
         x = torch.randint(vocab_size, (batch_size, seq_len))
         out = embedder(x)
 
-        self.assertTrue(out.shape == torch.Size([batch_size, seq_len, embed_dim]))
+        self.assertEqual(out.shape, torch.Size([batch_size, seq_len, embed_dim]))
 
 
 if __name__ == "__main__":
