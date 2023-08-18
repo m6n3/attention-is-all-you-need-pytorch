@@ -1,5 +1,4 @@
-from encoder import Encoder
-
+import encoder
 import torch
 import unittest
 
@@ -8,7 +7,7 @@ class TestEncoder(unittest.TestCase):
     def test_basics(self):
         with torch.no_grad():
             vocab_size, embed_dim = 1000_000, 512
-            e = Encoder(
+            e = encoder.Encoder(
                 vocab_size=vocab_size,
                 embed_dim=512,
                 feedforward_dim=2048,

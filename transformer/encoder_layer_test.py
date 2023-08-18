@@ -1,4 +1,4 @@
-from encoder_layer import EncoderLayer
+import encoder_layer
 import torch
 import unittest
 
@@ -6,7 +6,7 @@ import unittest
 class TestEncoderLayer(unittest.TestCase):
     def test_basics(self):
         embed_dim, feedforward_dim, num_heads, dropout = 512, 2048, 8, 0.1
-        el = EncoderLayer(embed_dim, feedforward_dim, num_heads, dropout)
+        el = encoder_layer.EncoderLayer(embed_dim, feedforward_dim, num_heads, dropout)
         batch_size, seq_len = 50, 100
         x = torch.rand(batch_size, seq_len, embed_dim)
         mask = torch.rand(batch_size, 1, 1, seq_len)
