@@ -8,6 +8,7 @@ import torch.nn as nn
 class Encoder(nn.Module):
     def __init__(
         self,
+        *,
         vocab_size,
         embed_dim,
         feedforward_dim,
