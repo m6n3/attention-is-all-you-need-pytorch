@@ -7,6 +7,8 @@ from torch.autograd import Variable
 class PositionalEmbedding(nn.Module):
     def __init__(self, embed_dim, vocab_size, max_seq_len, dropout) -> None:
         super().__init__()
+        assert embed_dim % 2 == 0
+
         self.embedding = nn.Embedding(vocab_size, embed_dim)
         self.dropout = nn.Dropout(dropout)
         self.pe = self.build_pe_matrix(max_seq_len, embed_dim)

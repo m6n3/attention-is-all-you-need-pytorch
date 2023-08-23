@@ -11,7 +11,7 @@ class TestEncoder(unittest.TestCase):
                 vocab_size=vocab_size,
                 embed_dim=512,
                 feedforward_dim=2048,
-                num_layers=1,
+                num_layers=2,
                 num_heads=8,
                 max_seq_len=100,
                 dropout=0.1,
