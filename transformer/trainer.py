@@ -1,5 +1,7 @@
-import dataset as d
+import os
+import logging
 
+import dataset as d
 import torch
 import torch.nn as nn
 from torch.optim import Adam
@@ -37,6 +39,7 @@ class Trainer(object):
         self.save_folder = save_folder
 
     def train(self):
+        logging.basicConfig(level=logging.INFO)
         self.model.train()
         best_loss = float("inf")
         num_steps = 0
@@ -82,6 +85,12 @@ class Trainer(object):
                     and (running_loss / steps_in_running_loss) < best_loss
                 ):
                     best_loss = running_loss / steps_in_running_loss
-                    torch.save(self.model.state_dict(), self.save_folder)
+                    logging.info(
+                        f" epoch: {epoch}, steps:{num_steps}, best_loss={best_loss}"
+                    )
+                    torch.save(
+                        self.model.state_dict(),
+                        os.path.join(self.save_folder, "model.pt"),
+                    )
                     running_loss = 0.0
                     steps_in_running_loss = 0

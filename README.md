@@ -33,11 +33,11 @@ model = transformer.Transformer(
 tr = trainer.Trainer(
   model=model,
   dataset=d,
-  train_batch_size=32,
+  train_batch_size=64,
   train_lr=8e-5,
   train_epochs=4,
-  train_num_steps=100_000,
-  save_every_n_steps=5,
+  train_num_steps=100_000,  # Training on a single batch of data is considered one step
+  save_every_n_steps=100,
   save_folder="./model"
 )
 

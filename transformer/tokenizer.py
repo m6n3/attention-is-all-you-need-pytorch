@@ -30,5 +30,5 @@ def build_vocab(textfile, tokenizer):
         for line in f:
             counter.update(tokenizer(line))
         v = vocab(counter, specials=["<UNKNOWN>", "<PAD>", "<SOS>", "<EOS>", "<UNK>"])
-        v.set_default_index(v['<UNK>'])
+        v.set_default_index(v["<UNK>"])
         return v
