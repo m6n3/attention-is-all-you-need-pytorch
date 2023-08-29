@@ -9,37 +9,37 @@ import tokenizer
 
 
 class Dataset(torch.utils.data.Dataset):
-    """Build a dataset from src and dst files.
+    """Build a dataset from src and trg files.
 
     It expects each line in destination file be the translation of its
     correspoinding line in src file.
     """
 
-    def __init__(self, src_lang, src_filepath, dst_lang, dst_filepath):
+    def __init__(self, src_lang, src_filepath, trg_lang, trg_filepath):
         self.src_lang = src_lang
-        self.dst_lang = dst_lang
+        self.trg_lang = trg_lang
         self.src_file = src_filepath
-        self.dst_file = dst_filepath
+        self.trg_file = trg_filepath
 
         # Build tokenizers and vocabs
         self.src_tokenizer = tokenizer.build_tokenizer(lang=src_lang)
-        self.dst_tokenizer = tokenizer.build_tokenizer(lang=dst_lang)
+        self.trg_tokenizer = tokenizer.build_tokenizer(lang=trg_lang)
         self.src_vocab = tokenizer.build_vocab(self.src_file, self.src_tokenizer)
-        self.dst_vocab = tokenizer.build_vocab(self.dst_file, self.dst_tokenizer)
+        self.trg_vocab = tokenizer.build_vocab(self.trg_file, self.trg_tokenizer)
 
         # Convert texts to tensors.
         with io.open(self.src_file, encoding="utf8") as src_f, io.open(
-            self.dst_file, encoding="utf8"
-        ) as dst_f:
+            self.trg_file, encoding="utf8"
+        ) as trg_f:
             self.tensors = []
-            for src_sentence, dst_sentence in zip(iter(src_f), iter(dst_f)):
+            for src_sentence, trg_sentence in zip(iter(src_f), iter(trg_f)):
                 src_tensor = torch.tensor(
                     [self.src_vocab[tok] for tok in self.src_tokenizer(src_sentence)]
                 )
-                dst_tensor = torch.tensor(
-                    [self.dst_vocab[tok] for tok in self.dst_tokenizer(dst_sentence)]
+                trg_tensor = torch.tensor(
+                    [self.trg_vocab[tok] for tok in self.trg_tokenizer(trg_sentence)]
                 )
-                self.tensors.append((src_tensor, dst_tensor))
+                self.tensors.append((src_tensor, trg_tensor))
 
     def __len__(self):
         return len(self.tensors)
@@ -50,43 +50,43 @@ class Dataset(torch.utils.data.Dataset):
     def get_src_vocab(self):
         return self.src_vocab
 
-    def get_dst_vocab(self):
-        return self.dst_vocab
+    def get_trg_vocab(self):
+        return self.trg_vocab
 
 
-def build_dataloader(dataset, src_vocab, dst_vocab, batch_size):
+def build_dataloader(dataset, src_vocab, trg_vocab, batch_size):
     def batcher(data):
         src_sos, src_eos, src_pad = (
             src_vocab["<SOS>"],
             src_vocab["<EOS>"],
             src_vocab["<PAD>"],
         )
-        dst_sos, dst_eos, dst_pad = (
-            dst_vocab["<SOS>"],
-            dst_vocab["<EOS>"],
-            dst_vocab["<PAD>"],
+        trg_sos, trg_eos, trg_pad = (
+            trg_vocab["<SOS>"],
+            trg_vocab["<EOS>"],
+            trg_vocab["<PAD>"],
         )
 
-        src_batch, dst_batch = [], []
-        for src_tensor, dst_tensor in data:
+        src_batch, trg_batch = [], []
+        for src_tensor, trg_tensor in data:
             src_batch.append(
                 torch.cat(
                     [torch.tensor([src_sos]), src_tensor, torch.tensor([src_eos])]
                 )
             )
-            dst_batch.append(
+            trg_batch.append(
                 torch.cat(
-                    [torch.tensor([dst_sos]), dst_tensor, torch.tensor([dst_eos])]
+                    [torch.tensor([trg_sos]), trg_tensor, torch.tensor([trg_eos])]
                 )
             )
 
         # Make batch elements of same size.
         src_batch = pad_sequence(src_batch, padding_value=src_pad)
-        dst_batch = pad_sequence(dst_batch, padding_value=dst_pad)
+        trg_batch = pad_sequence(trg_batch, padding_value=trg_pad)
 
         # src_batch: [src max(seq_len) + 2, batch_size]
-        # dst_batch: [dst max(seq_len) + 2, batch_size]
+        # trg_batch: [trg max(seq_len) + 2, batch_size]
 
-        return src_batch, dst_batch
+        return src_batch, trg_batch
 
     return DataLoader(dataset, batch_size=batch_size, shuffle=True, collate_fn=batcher)

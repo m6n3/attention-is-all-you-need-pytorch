@@ -24,14 +24,14 @@ class Trainer(object):
         self.dataloader = d.build_dataloader(
             dataset=dataset,
             src_vocab=dataset.get_src_vocab(),
-            dst_vocab=dataset.get_dst_vocab(),
+            trg_vocab=dataset.get_trg_vocab(),
             batch_size=train_batch_size,
         )
         self.train_epochs = train_epochs
         self.train_num_steps = train_num_steps
         self.optim = Adam(self.model.parameters(), lr=train_lr)
         self.loss_fn = nn.CrossEntropyLoss(
-            ignore_index=dataset.get_dst_vocab()["<PAD>"]
+            ignore_index=dataset.get_trg_vocab()["<PAD>"]
         )
         self.save_every_n_steps = save_every_n_steps
         self.save_folder = save_folder
