@@ -1,4 +1,4 @@
-import attention as a
+from transformer import attention as a
 
 import torch
 import torch.nn as nn

@@ -1,7 +1,8 @@
 import os
 import logging
 
-import dataset as d
+from transformer import dataset as d
+
 import torch
 import torch.nn as nn
 from torch.optim import Adam

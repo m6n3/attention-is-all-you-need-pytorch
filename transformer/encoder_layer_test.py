@@ -1,4 +1,5 @@
-import encoder_layer
+from transformer import encoder_layer
+
 import torch
 import unittest
 

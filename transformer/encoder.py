@@ -1,5 +1,5 @@
-from encoder_layer import EncoderLayer
-from positional_embedding import PositionalEmbedding
+from transformer import encoder_layer
+from transformer import positional_embedding
 
 import torch
 import torch.nn as nn
@@ -18,7 +18,7 @@ class Encoder(nn.Module):
         dropout,
     ):
         super().__init__()
-        self.positional_embedding = PositionalEmbedding(
+        self.positional_embedding = positional_embedding.PositionalEmbedding(
             embed_dim=embed_dim,
             vocab_size=vocab_size,
             max_seq_len=max_seq_len,
@@ -26,7 +26,7 @@ class Encoder(nn.Module):
         )
         self.encoder_layers = nn.ModuleList(
             [
-                EncoderLayer(
+                encoder_layer.EncoderLayer(
                     embed_dim=embed_dim,
                     feedforward_dim=feedforward_dim,
                     num_heads=num_heads,

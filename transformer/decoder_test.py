@@ -1,4 +1,4 @@
-import decoder
+from transformer import decoder
 
 import torch
 import unittest

@@ -1,6 +1,4 @@
-from attention import MultiHeadAttention
-from residual import Residual
-from feedforward import FeedForward
+from transformer import attention, residual, feedforward
 
 import torch
 import torch.nn as nn
@@ -9,12 +7,16 @@ import torch.nn as nn
 class DecoderLayer(nn.Module):
     def __init__(self, embed_dim, feedforward_dim, num_heads, dropout) -> None:
         super().__init__()
-        self.multi_head_attention_1 = MultiHeadAttention(embed_dim, num_heads, dropout)
-        self.residual_1 = Residual(embed_dim, dropout)
-        self.multi_head_attention_2 = MultiHeadAttention(embed_dim, num_heads, dropout)
-        self.residual_2 = Residual(embed_dim, dropout)
-        self.feed_forward = FeedForward(embed_dim, feedforward_dim, dropout)
-        self.residual_3 = Residual(embed_dim, dropout)
+        self.multi_head_attention_1 = attention.MultiHeadAttention(
+            embed_dim, num_heads, dropout
+        )
+        self.residual_1 = residual.Residual(embed_dim, dropout)
+        self.multi_head_attention_2 = attention.MultiHeadAttention(
+            embed_dim, num_heads, dropout
+        )
+        self.residual_2 = residual.Residual(embed_dim, dropout)
+        self.feed_forward = feedforward.FeedForward(embed_dim, feedforward_dim, dropout)
+        self.residual_3 = residual.Residual(embed_dim, dropout)
 
     def forward(self, x, mask, enc_out, enc_mask):
         # x: [batch size, seq len, embed dim]

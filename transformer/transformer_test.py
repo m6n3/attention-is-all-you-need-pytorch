@@ -1,6 +1,5 @@
-import transformer
+from transformer import transformer, tokenizer
 
-import tokenizer
 import torch
 import unittest
 
@@ -8,10 +7,12 @@ import unittest
 class TestTransformer(unittest.TestCase):
     def test_basics(self):
         src_vocab = tokenizer.build_vocab(
-            "./testdata/english.txt", tokenizer.build_tokenizer("en_core_web_sm")
+            "transformer/testdata/english.txt",
+            tokenizer.build_tokenizer("en_core_web_sm"),
         )
         trg_vocab = tokenizer.build_vocab(
-            "./testdata/french.txt", tokenizer.build_tokenizer("fr_core_news_sm")
+            "transformer/testdata/french.txt",
+            tokenizer.build_tokenizer("fr_core_news_sm"),
         )
         t = transformer.Transformer(
             src_vocab=src_vocab, trg_vocab=trg_vocab, hid_dim=512

@@ -5,7 +5,7 @@ import urllib.parse
 from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
 
-import tokenizer
+from transformer import tokenizer
 
 
 class Dataset(torch.utils.data.Dataset):

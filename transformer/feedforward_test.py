@@ -1,6 +1,7 @@
-import feedforward as ff
-import unittest
+from transformer import feedforward as ff
+
 import torch
+import unittest
 
 
 class TestFeedForward(unittest.TestCase):

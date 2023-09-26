@@ -1,4 +1,4 @@
-import residual
+from transformer import residual
 import torch
 import unittest
 

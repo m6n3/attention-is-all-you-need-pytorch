@@ -1,18 +1,16 @@
 import torch
 import unittest
 
-import dataset as d
-
-# from dataset import Dataset
+from transformer import dataset as d
 
 
 class TestDataset(unittest.TestCase):
     def test_basics(self):
         dataset = d.Dataset(
             src_lang="en_core_web_sm",
-            src_filepath="./testdata/english.txt",
+            src_filepath="transformer/testdata/english.txt",
             trg_lang="fr_core_news_sm",
-            trg_filepath="./testdata/french.txt",
+            trg_filepath="transformer/testdata/french.txt",
         )
         batch_size = 2
         src_vocab, trg_vocab = dataset.get_src_vocab(), dataset.get_trg_vocab()

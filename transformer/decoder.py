@@ -1,5 +1,4 @@
-import decoder_layer
-import positional_embedding
+from transformer import decoder_layer, positional_embedding
 import torch.nn as nn
 
 

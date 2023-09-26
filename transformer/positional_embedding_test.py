@@ -1,4 +1,4 @@
-import positional_embedding as pe
+from transformer import positional_embedding as pe
 
 import torch
 import unittest

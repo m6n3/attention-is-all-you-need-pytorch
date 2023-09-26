@@ -1,4 +1,5 @@
-import decoder_layer
+from transformer import decoder_layer
+
 import torch
 import unittest
 

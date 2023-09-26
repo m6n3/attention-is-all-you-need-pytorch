@@ -1,0 +1,5 @@
+nose2
+setuptools==58.2.0  # bit.ly/3ESknsR
+spacy
+torch
+torchtext
