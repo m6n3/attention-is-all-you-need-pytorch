@@ -12,10 +12,10 @@ import trainer
 import translator
 
 d = dataset.Dataset(
-    src_lang="en_core_web_sm",  # see spacy.io
-    src_filepath="./testdata/english.txt",
-    trg_lang="fr_core_news_sm",
-    trg_filepath='./testdata/french.txt'
+    src_lang=<src_lang>,                      # E.g., "en_core_web_sm" see spacy.io
+    src_filepath=<src_lang_training_file>     # E.g., "./transformer/testdata/english.txt",
+    trg_lang=<target_lang>                    # E.g., "fr_core_news_sm",
+    trg_filepath=<target_lang_training_file>  # E.g., './transformer/testdata/french.txt'
 )
 
 model = transformer.Transformer(
@@ -38,7 +38,7 @@ tr = trainer.Trainer(
   train_epochs=4,
   train_num_steps=100_000,  # Training on a single batch of data is considered one step
   save_every_n_steps=100,
-  save_folder="./model"
+  save_folder=<where_to_same_trained_model>  # "${HOME}/model/"
 )
 
 tr.train()
@@ -58,7 +58,7 @@ translated = t.translate("a sentence in en.")
 ## Dev
 
 ```bash
-python3 -m venv venv3
+python3 -m venv myvenv
 source venv3/bin/activate
 git clone https://github.com/m6n3/attention-is-all-you-need-pytorch.git
 cd attention-is-all-you-need-pytorch
