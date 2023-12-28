@@ -55,4 +55,21 @@ t = translator.Translator(
 translated = t.translate("a sentence in en.")
 ```
 
+## Dev
 
+```bash
+python3 -m venv venv3
+source venv3/bin/activate
+git clone https://github.com/m6n3/attention-is-all-you-need-pytorch.git
+cd attention-is-all-you-need-pytorch
+python -m pip install --upgrade pip
+python -m pip install --upgrade wheel
+python -m pip install --upgrade .
+pip install -r requirements.txt
+python -m spacy download fr_core_news_sm
+python -m spacy download en_core_web_sm
+
+# Run all tests
+nose2 -v
+```
+```
