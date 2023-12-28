@@ -5,17 +5,19 @@
 ```python
 import torch
 
-import dataset
-import tokenizer
-import transformer
-import trainer
-import translator
+from transformer import dataset, tokenizer, transformer, trainer, translator
+
+SRC_LANG=...              # E.g., "en_core_web_sm" see spacy.io
+SRC_TRAINING_FILE=...     # E.g., "./transformer/testdata/english.txt"
+TARGET_LANG=...           # E.g., "fr_core_news_sm"
+TARGET_TRAINING_FILE=...  # E.g., "./transformer/testdata/french.txt'
+MODEL_SAVE_DIR=...        # E.g., "${HOME}/model"
 
 d = dataset.Dataset(
-    src_lang=<src_lang>,                      # E.g., "en_core_web_sm" see spacy.io
-    src_filepath=<src_lang_training_file>     # E.g., "./transformer/testdata/english.txt",
-    trg_lang=<target_lang>                    # E.g., "fr_core_news_sm",
-    trg_filepath=<target_lang_training_file>  # E.g., './transformer/testdata/french.txt'
+    src_lang=SRC_LANG,
+    src_filepath=SRC_TRAINING_FILE,
+    trg_lang=TARGET_LANG,
+    trg_filepath=TARGET_TRAINING_FILE,
 )
 
 model = transformer.Transformer(
@@ -38,7 +40,7 @@ tr = trainer.Trainer(
   train_epochs=4,
   train_num_steps=100_000,  # Training on a single batch of data is considered one step
   save_every_n_steps=100,
-  save_folder=<where_to_same_trained_model>  # "${HOME}/model/"
+  save_folder=MODEL_SAVE_DIR,
 )
 
 tr.train()
