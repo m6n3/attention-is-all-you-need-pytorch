@@ -20,7 +20,7 @@ class Trainer(object):
         train_epochs=10,
         train_num_steps=1_000_000,
         save_every_n_steps=100,
-        save_folder="./model",
+        model_save_path="./checkpoint.pt",
         use_gpu=False,
     ):
         super().__init__()
@@ -48,8 +48,17 @@ class Trainer(object):
             ignore_index=dataset.get_trg_vocab()["<PAD>"]
         )
         self.save_every_n_steps = save_every_n_steps
-        self.save_folder = save_folder
-        model.to(self.device)
+        self.model_save_path = model_save_path
+        self.model.to(self.device)
+        self.init_model()
+
+    def init_model(self):
+      for p in self.model.parameters():
+        if p.dim() > 1:
+          nn.init.xavier_uniform_(p)
+
+    def load(self, model_path):
+      self.model.load_state_dict(torch.load(model_path))
 
     def train(self):
         logging.basicConfig(level=logging.INFO)
@@ -94,7 +103,7 @@ class Trainer(object):
                 steps_in_running_loss += 1
 
                 if (
-                    self.save_folder
+                    len(self.model_save_path) > 0
                     and (
                         idx % self.save_every_n_steps == 0
                         or num_steps == self.train_num_steps
@@ -105,9 +114,6 @@ class Trainer(object):
                     logging.info(
                         f" epoch: {epoch}, steps:{num_steps}, best_loss={best_loss}"
                     )
-                    torch.save(
-                        self.model.state_dict(),
-                        os.path.join(self.save_folder, "model.pt"),
-                    )
+                    torch.save(self.model.state_dict(), self.model_save_path)
                     running_loss = 0.0
                     steps_in_running_loss = 0
