@@ -49,7 +49,7 @@ t = translator.Translator(
     model=model,
     src_vocab=d.get_src_vocab(),
     trg_vocab=d.get_trg_vocab(),
-    src_tokenizer=tokenizer.build_tokenizer(lang="en_core_web_sm"),
+    src_tokenizer=tokenizer.build_tokenizer(lang=SRC_LANG),
     max_trg_sentence_len=100,
 )
 
