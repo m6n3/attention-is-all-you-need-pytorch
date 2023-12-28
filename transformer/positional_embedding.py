@@ -5,7 +5,7 @@ from torch.autograd import Variable
 
 
 class PositionalEmbedding(nn.Module):
-    def __init__(self, embed_dim, vocab_size, max_seq_len, dropout) -> None:
+    def __init__(self, embed_dim, vocab_size, max_seq_len, dropout, device) -> None:
         super().__init__()
         assert embed_dim % 2 == 0
 
@@ -13,6 +13,7 @@ class PositionalEmbedding(nn.Module):
         self.dropout = nn.Dropout(dropout)
         self.pe = self.build_pe_matrix(max_seq_len, embed_dim)
         self.scale = math.sqrt(embed_dim)
+        self.device = device
 
     def build_pe_matrix(self, max_seq_len, embed_dim):
         pe = torch.zeros(max_seq_len, embed_dim)
@@ -31,7 +32,9 @@ class PositionalEmbedding(nn.Module):
         # embed: [batch size, seq len, embed dim]
 
         seq_len = src.size(1)
-        positional_encoding = Variable(self.pe[:seq_len, :], requires_grad=False)
+        positional_encoding = Variable(self.pe[:seq_len, :], requires_grad=False).to(
+            self.device
+        )
         # positional_encoding: [seq len, embed size]
 
         positional_embedding = (

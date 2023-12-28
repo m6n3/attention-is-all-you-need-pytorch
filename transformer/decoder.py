@@ -13,6 +13,7 @@ class Decoder(nn.Module):
         num_heads,
         max_seq_len,
         dropout,
+        device,
     ):
         super().__init__()
         self.positional_embedding = positional_embedding.PositionalEmbedding(
@@ -20,6 +21,7 @@ class Decoder(nn.Module):
             vocab_size=vocab_size,
             max_seq_len=max_seq_len,
             dropout=dropout,
+            device=device,
         )
         self.decoder_layers = nn.ModuleList(
             [

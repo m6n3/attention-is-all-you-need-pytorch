@@ -20,6 +20,7 @@ class TestDataset(unittest.TestCase):
             src_vocab=src_vocab,
             trg_vocab=trg_vocab,
             batch_size=batch_size,
+            device=torch.device("cpu"),
         )
 
         src_sos, src_eos, src_pad = (

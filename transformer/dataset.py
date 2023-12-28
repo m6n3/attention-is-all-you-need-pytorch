@@ -54,7 +54,7 @@ class Dataset(torch.utils.data.Dataset):
         return self.trg_vocab
 
 
-def build_dataloader(dataset, src_vocab, trg_vocab, batch_size):
+def build_dataloader(dataset, src_vocab, trg_vocab, batch_size, device):
     def batcher(data):
         src_sos, src_eos, src_pad = (
             src_vocab["<SOS>"],
@@ -72,12 +72,12 @@ def build_dataloader(dataset, src_vocab, trg_vocab, batch_size):
             src_batch.append(
                 torch.cat(
                     [torch.tensor([src_sos]), src_tensor, torch.tensor([src_eos])]
-                )
+                ).to(device)
             )
             trg_batch.append(
                 torch.cat(
                     [torch.tensor([trg_sos]), trg_tensor, torch.tensor([trg_eos])]
-                )
+                ).to(device)
             )
 
         # Make batch elements of same size.

@@ -21,14 +21,25 @@ class Trainer(object):
         train_num_steps=1_000_000,
         save_every_n_steps=100,
         save_folder="./model",
+        use_gpu=False,
     ):
         super().__init__()
+
+        if use_gpu:
+            assert (
+                torch.cuda.is_available()
+            ), "Error: no GPU device is available, consider setting `use_gpu` to False."
+            self.device = torch.device("cuda:0")
+        else:
+            self.device = torch.device("cpu")
+
         self.model = model
         self.dataloader = d.build_dataloader(
             dataset=dataset,
             src_vocab=dataset.get_src_vocab(),
             trg_vocab=dataset.get_trg_vocab(),
             batch_size=train_batch_size,
+            device=self.device,
         )
         self.train_epochs = train_epochs
         self.train_num_steps = train_num_steps
@@ -38,6 +49,7 @@ class Trainer(object):
         )
         self.save_every_n_steps = save_every_n_steps
         self.save_folder = save_folder
+        model.to(self.device)
 
     def train(self):
         logging.basicConfig(level=logging.INFO)
@@ -56,6 +68,10 @@ class Trainer(object):
 
                 src, trg = src.permute(1, 0), trg.permute(1, 0)
                 # src, trg: [batch size, seq len]
+
+                # TODO: should be done inside dataloader?
+                src = src.to(self.device)
+                trg = trg.to(self.device)
 
                 # we do not supply trg <EOS> for training because in inference we want model predict <EOS> itself.
                 # we ignore <SOS> for evaluating model prediction, because in inference we supply <SOS> to model, and expect prediction for subsequent words.

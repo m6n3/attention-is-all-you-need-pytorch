@@ -17,8 +17,18 @@ class Transformer(nn.Module):
         num_attention_heads=8,
         max_seq_len=100,
         dropout=0.1,
+        use_gpu=False,
     ):
         super().__init__()
+
+        if use_gpu:
+            assert (
+                torch.cuda.is_available()
+            ), "Error: no GPU device is available, consider setting `use_gpu` to False."
+            self.device = torch.device("cuda:0")
+        else:
+            self.device = torch.device("cpu")
+
         self.src_vocab = src_vocab
         self.trg_vocab = trg_vocab
         self.encoder = encoder.Encoder(
@@ -29,6 +39,7 @@ class Transformer(nn.Module):
             num_heads=num_attention_heads,
             max_seq_len=max_seq_len,
             dropout=dropout,
+            device=self.device,
         )
         self.decoder = decoder.Decoder(
             vocab_size=len(trg_vocab),
@@ -38,7 +49,11 @@ class Transformer(nn.Module):
             num_heads=num_attention_heads,
             max_seq_len=max_seq_len,
             dropout=dropout,
+            device=self.device,
         )
+
+    def get_device(self):
+        return self.device
 
     def make_src_mask(self, src):
         # src: [batch size, seq len]
@@ -49,7 +64,9 @@ class Transformer(nn.Module):
         # will be applied.
         # Hint: the tensor in MultiHeadedAttention module has shape
         # of [batch size, num heads, seq len, seq len].
-        src_mask = (src != self.src_vocab["<PAD>"]).unsqueeze(1).unsqueeze(2)
+        src_mask = (
+            (src != self.src_vocab["<PAD>"]).unsqueeze(1).unsqueeze(2).to(self.device)
+        )
         # pad_mask: [batch_size, 1, 1, seq len]
 
         return src_mask
@@ -58,12 +75,16 @@ class Transformer(nn.Module):
         # trg: [batch size, seq len]
 
         # mask to ignore <PAD> token in trg sentence.
-        pad_mask = (trg != self.trg_vocab["<PAD>"]).unsqueeze(1).unsqueeze(2)
+        pad_mask = (
+            (trg != self.trg_vocab["<PAD>"]).unsqueeze(1).unsqueeze(2).to(self.device)
+        )
         # pad_mask: [batch size, 1, 1, seq len]
 
         # mask to ignore future tokens (i.e., next words, hence a triangular shape).
         seq_len = trg.size(1)
-        future_token_mask = torch.tril(torch.ones(seq_len, seq_len)).bool()
+        future_token_mask = (
+            torch.tril(torch.ones(seq_len, seq_len)).bool().to(self.device)
+        )
         # future_token_mask: [seq len, seq len]
 
         trg_mask = pad_mask & future_token_mask  # broadcasting magic.

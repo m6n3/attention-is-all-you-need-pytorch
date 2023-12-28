@@ -15,6 +15,7 @@ class TestDecoder(unittest.TestCase):
             num_heads=8,
             max_seq_len=100,
             dropout=0.1,
+            device=torch.device("cpu"),
         )
 
         batch_size, seq_len = 50, 100
