@@ -10,7 +10,7 @@ from transformer import dataset, tokenizer, transformer, trainer, translator
 SRC_LANG=...              # E.g., "en_core_web_sm" see spacy.io
 SRC_TRAINING_FILE=...     # E.g., "./transformer/testdata/english.txt"
 TARGET_LANG=...           # E.g., "fr_core_news_sm"
-TARGET_TRAINING_FILE=...  # E.g., "./transformer/testdata/french.txt'
+TARGET_TRAINING_FILE=...  # E.g., "./transformer/testdata/french.txt"
 MODEL_SAVE_DIR=...        # E.g., "${HOME}/model"
 
 d = dataset.Dataset(
