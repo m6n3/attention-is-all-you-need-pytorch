@@ -1,6 +1,6 @@
 # Attention is all you need: A Pytorch Implementation
 
-## Usage 
+## Usage
 
 ```python
 import torch
@@ -8,10 +8,10 @@ import torch
 from transformer import dataset, tokenizer, transformer, trainer, translator
 
 SRC_LANG=...              # E.g., "en_core_web_sm" see spacy.io
-SRC_TRAINING_FILE=...     # E.g., "./transformer/testdata/english.txt"
+SRC_TRAINING_FILE=...     # E.g., "./transformer/data/english.txt"
 TARGET_LANG=...           # E.g., "fr_core_news_sm"
-TARGET_TRAINING_FILE=...  # E.g., "./transformer/testdata/french.txt"
-MODEL_SAVE_DIR=...        # E.g., "${HOME}/model"
+TARGET_TRAINING_FILE=...  # E.g., "./transformer/data/french.txt"
+CHECKPOINT_PATH=...       # E.g., "./checkpoint.pt" or download https://huggingface.co/m6n3xx/attention-is-all-you-need-pytorch/blob/main/checkpoint_12282023_loss_3.3954.pt if model config remains the same as below.
 
 d = dataset.Dataset(
     src_lang=SRC_LANG,
@@ -25,8 +25,8 @@ model = transformer.Transformer(
     trg_vocab=d.get_trg_vocab(),
     hid_dim=512,
     feedforward_dim=2048,
-    num_enc_layers=6,
-    num_dec_layers=6,
+    num_enc_layers=3,
+    num_dec_layers=3,
     num_attention_heads=8,
     max_seq_len=100,
     dropout=0.1,
@@ -38,10 +38,14 @@ tr = trainer.Trainer(
   train_batch_size=64,
   train_lr=8e-5,
   train_epochs=4,
-  train_num_steps=100_000,  # Training on a single batch of data is considered one step
-  save_every_n_steps=100,
-  save_folder=MODEL_SAVE_DIR,
+  train_num_steps=10_000,  # Training on a single batch of data is considered one step
+  checkpoint_every_n_steps=100,
+  checkpoint_path=CHECKPOINT_PATH,
 )
+
+# Start from last checkpoint (if any).
+if os.path.exists(CHECKPOINT_PATH):
+  tr.load_checkpoint(CHECKPOINT_PATH)
 
 tr.train()
 
@@ -54,10 +58,11 @@ t = translator.Translator(
 )
 
 
-translated = t.translate("a sentence in en.")
+print(t.translate("a sentence in en."))
 ```
 
-## Dev
+Or
+
 
 ```bash
 python3 -m venv myvenv
@@ -73,4 +78,10 @@ python -m spacy download en_core_web_sm
 
 # Run all tests
 nose2 -v
+
+# Example training script (saves checkpoint at ./checkpoint.pt).
+python3 example_training.py
+
+# Example inference script (needs checkpoint at ./checkpoint.pt).
+echo "God Job" | python3 example_inference.py
 ```

@@ -49,7 +49,6 @@ class Trainer(object):
         )
         self.checkpoint_every_n_steps = checkpoint_every_n_steps
         self.checkpoint_path = checkpoint_path
-        self.model.to(self.device)
         self.init_model()
 
     def init_model(self):

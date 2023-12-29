@@ -37,7 +37,7 @@ if __name__ == "__main__":
       train_batch_size=64,
       train_lr=8e-5,
       train_epochs=4,
-      train_num_steps=10_000,  # Training on a single batch of data is considered one step
+      train_num_steps=10,  # Training on a single batch of data is considered one step
       checkpoint_every_n_steps=100,
       checkpoint_path=CHECKPOINT_PATH,
       use_gpu=True,
