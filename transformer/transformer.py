@@ -52,8 +52,17 @@ class Transformer(nn.Module):
             device=self.device,
         )
 
+        # put model on right device.
+        self.to(self.device)
+
     def get_device(self):
         return self.device
+
+    def load_checkpoint(self, checkpoint_path):
+        self.load_state_dict(torch.load(checkpoint_path))
+
+    def save_checkpoint(self, checkpoint_path):
+        torch.save(self.state_dict(), checkpoint_path)
 
     def make_src_mask(self, src):
         # src: [batch size, seq len]

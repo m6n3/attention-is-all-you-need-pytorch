@@ -19,7 +19,7 @@ class TestTrainer(unittest.TestCase):
             num_dec_layers=2,
         )
         t = trainer.Trainer(
-            model=model, dataset=d, train_batch_size=2, model_save_path=""
+            model=model, dataset=d, train_batch_size=2, checkpoint_path=""
         )  # Do not save the model.
 
         t.train()

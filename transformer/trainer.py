@@ -19,8 +19,8 @@ class Trainer(object):
         train_lr=8e-5,
         train_epochs=10,
         train_num_steps=1_000_000,
-        save_every_n_steps=100,
-        model_save_path="./checkpoint.pt",
+        checkpoint_every_n_steps=100,
+        checkpoint_path="./checkpoint.pt",
         use_gpu=False,
     ):
         super().__init__()
@@ -47,18 +47,18 @@ class Trainer(object):
         self.loss_fn = nn.CrossEntropyLoss(
             ignore_index=dataset.get_trg_vocab()["<PAD>"]
         )
-        self.save_every_n_steps = save_every_n_steps
-        self.model_save_path = model_save_path
+        self.checkpoint_every_n_steps = checkpoint_every_n_steps
+        self.checkpoint_path = checkpoint_path
         self.model.to(self.device)
         self.init_model()
 
     def init_model(self):
-      for p in self.model.parameters():
-        if p.dim() > 1:
-          nn.init.xavier_uniform_(p)
+        for p in self.model.parameters():
+            if p.dim() > 1:
+                nn.init.xavier_uniform_(p)
 
-    def load(self, model_path):
-      self.model.load_state_dict(torch.load(model_path))
+    def load_checkpoint(self, checkpoint_path):
+        self.model.load_state_dict(torch.load(checkpoint_path))
 
     def train(self):
         logging.basicConfig(level=logging.INFO)
@@ -77,10 +77,6 @@ class Trainer(object):
 
                 src, trg = src.permute(1, 0), trg.permute(1, 0)
                 # src, trg: [batch size, seq len]
-
-                # TODO: should be done inside dataloader?
-                src = src.to(self.device)
-                trg = trg.to(self.device)
 
                 # we do not supply trg <EOS> for training because in inference we want model predict <EOS> itself.
                 # we ignore <SOS> for evaluating model prediction, because in inference we supply <SOS> to model, and expect prediction for subsequent words.
@@ -103,9 +99,9 @@ class Trainer(object):
                 steps_in_running_loss += 1
 
                 if (
-                    len(self.model_save_path) > 0
+                    len(self.checkpoint_path) > 0
                     and (
-                        idx % self.save_every_n_steps == 0
+                        idx % self.checkpoint_every_n_steps == 0
                         or num_steps == self.train_num_steps
                     )
                     and (running_loss / steps_in_running_loss) < best_loss
@@ -114,6 +110,6 @@ class Trainer(object):
                     logging.info(
                         f" epoch: {epoch}, steps:{num_steps}, best_loss={best_loss}"
                     )
-                    torch.save(self.model.state_dict(), self.model_save_path)
+                    self.model.save_checkpoint(self.checkpoint_path)
                     running_loss = 0.0
                     steps_in_running_loss = 0

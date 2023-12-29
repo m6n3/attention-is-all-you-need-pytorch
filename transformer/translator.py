@@ -6,11 +6,11 @@ class Translator(object):
         self, *, model, src_vocab, trg_vocab, src_tokenizer, max_trg_sentence_len
     ):
         self.model = model
+        self.device = model.get_device()
         self.src_vocab = src_vocab
         self.trg_vocab = trg_vocab
         self.src_tokenizer = src_tokenizer
         self.max_trg_sentence_len = max_trg_sentence_len
-        self.device = model.get_device()
 
     def translate(self, sentence):
         src = (
