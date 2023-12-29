@@ -42,7 +42,6 @@ if __name__ == "__main__":
         src_tokenizer=tokenizer.build_tokenizer(lang=SRC_LANG),
         max_trg_sentence_len=100,
     )
-    for line in sys.stdin:
-        src = "Good job!"
+    for src in sys.stdin:
         trg = t.translate(src)
         print(f"{src} --> {trg}")
