@@ -3,6 +3,7 @@
 ## Usage
 
 ```python
+import os
 import torch
 
 from transformer import dataset, tokenizer, transformer, trainer, translator
@@ -61,18 +62,20 @@ t = translator.Translator(
 print(t.translate("a sentence in en."))
 ```
 
-Or
+Alternatively
 
 
 ```bash
 python3 -m venv myvenv
 source venv3/bin/activate
+
 git clone https://github.com/m6n3/attention-is-all-you-need-pytorch.git
 cd attention-is-all-you-need-pytorch
 python -m pip install --upgrade pip
 python -m pip install --upgrade wheel
 python -m pip install --upgrade .
 pip install -r requirements.txt
+
 python -m spacy download fr_core_news_sm
 python -m spacy download en_core_web_sm
 
@@ -83,5 +86,5 @@ nose2 -v
 python3 example_training.py
 
 # Example inference script (needs checkpoint at ./checkpoint.pt).
-echo "God Job" | python3 example_inference.py
+echo "Good Job!" | python3 example_inference.py
 ```
